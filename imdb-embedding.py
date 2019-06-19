@@ -5,7 +5,7 @@
 from keras.preprocessing import sequence
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation
-from keras.layers import Embedding, LSTM
+from keras.layers import Embedding, LSTM, CuDNNLSTM
 from keras.layers import Conv1D, Flatten
 from keras.datasets import imdb
 import wandb
@@ -41,7 +41,7 @@ X_test = sequence.pad_sequences(X_test, maxlen=config.maxlen)
 
 ## create model
 model = Sequential()
-model.add(Embedding(config.vocab_size, 100, input_length=config.maxlen)
+model.add(Embedding(config.vocab_size, 100, input_length=config.maxlen))
 model.add(LSTM(config.hidden_dims, activation="sigmoid"))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy',

@@ -25,7 +25,7 @@ config.embedding_dims = 50
 config.filters = 250
 config.kernel_size = 3
 config.hidden_dims = 100
-config.epochs = 10
+config.epochs = 125
 
 (X_train, y_train), (X_test, y_test) = imdb.load_imdb()
 
@@ -59,12 +59,14 @@ for word, index in tokenizer.word_index.items():
 ## create model
 model = Sequential()
 model.add(Embedding(config.vocab_size, 100, input_length=config.maxlen, weights=[embedding_matrix], trainable=False))
-model.add(LSTM(config.hidden_dims, activation="sigmoid"))
+model.add(Flatten(input_shape=(config.maxlen*config.hidden_dims,1)))
+model.add(Dense(100, activation="relu"))
+model.add(Dropout(0.4))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy',
               optimizer='rmsprop',
               metrics=['accuracy'])
-
+print(model.summary())
 model.fit(X_train, y_train,
           batch_size=config.batch_size,
           epochs=config.epochs,
